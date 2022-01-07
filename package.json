@@ -4,7 +4,7 @@
   "description": "Desafio do programa de bolsas da Compass",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "docker-compose up -d && nodemon src/server.js"
   },
   "repository": {
     "type": "git",

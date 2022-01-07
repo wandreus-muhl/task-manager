@@ -6,15 +6,17 @@ require('dotenv').config()
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({
-    extended: true
+	extended: true
 }))
 
 // Starting up server
 const port = process.env.API_PORT || 3000
 app.listen(port, () => {
-    console.log(`🚀 - Servidor rodando em http://localhost:${port}`)
+	console.log(`🚀 - Servidor rodando em http://localhost:${port} \n💻 - Adminer hospedado em http://localhost:8080`)
 })
 
 app.get('/', (req, res) => {
-    res.send({message: 'API has been initialized'})
+	res.send({
+		message: 'API has been initialized'
+	})
 })
