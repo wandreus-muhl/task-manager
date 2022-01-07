@@ -1,0 +1,22 @@
+version: "3.1"
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - 3306:${DB_PORT}
+    networks:
+      - task-manager-network
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8080:8080
+    networks:
+      - task-manager-network
+
+networks:
+  task-manager-network:
+    driver: bridge
