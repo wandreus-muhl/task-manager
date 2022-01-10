@@ -9,10 +9,21 @@ app.use(express.urlencoded({
 	extended: true
 }))
 
-// Starting up server
-const port = process.env.API_PORT || 3000
-app.listen(port, () => {
-	console.log(`🚀 - Servidor rodando em http://localhost:${port} \n💻 - Adminer hospedado em http://localhost:8080`)
+// Synchronizing database
+const connection = require('./database/connection')
+const models = require('./database/models')
+
+connection.sync({
+	force: true,
+	logging: false
+}).then(() => {
+	console.log('📇 - Banco de dados sincronizado')
+}).then(() => {
+	// Starting up server
+	const port = process.env.API_PORT || 3000
+	app.listen(port, () => {
+		console.log(`🚀 - Servidor rodando em http://localhost:${port} \n💻 - Adminer hospedado em http://localhost:8080`)
+	})
 })
 
 app.get('/', (req, res) => {
