@@ -9,6 +9,7 @@ router.post('/project', projectController.newProject)
 router.get('/project', projectController.listAllProjects)
 
 // Tasks routes
-router.get('/project/:id', taskController.listAllTasks)
+router.get('/project/:projectId', taskController.listAllTasks)
+router.get('/project/:projectId/task/:taskId', taskController.listATask)
 
 module.exports = router
