@@ -17,15 +17,15 @@ exports.newProject = async (req, res) => {
       })
     } else {
       // Creating the project on database
-      models.Project.create(req.body).then(project => {
+      await models.Project.create(req.body).then(project => {
         let aux = []
         // Checking for tasks in request body
         if (req.body.tasks && req.body.tasks.length !== 0) {
           // If has, run all the array, creating one register for each task in it
           let tasks = req.body.tasks
-          tasks.forEach(task => {
+          tasks.forEach(async task => {
             task.projectId = project.id
-            models.Task.create(task)
+            await models.Task.create(task)
             aux.push(task)
           })
         }
@@ -40,3 +40,22 @@ exports.newProject = async (req, res) => {
   }
 }
 
+exports.listAllProjects = async (req, res) => {
+  try {
+    models.Project.findAll({
+      include: models.Task
+    }).then(projects => {
+      if (!projects || projects.length === 0) {
+        res.status(400).send({
+          message: 'There is no projects in database'
+        })
+      } else {
+        res.status(200).send(projects)
+      }
+    })
+  } catch (error) {
+    res.status(500).send({
+      message: error.message
+    })
+  }
+}

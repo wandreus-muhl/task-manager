@@ -6,5 +6,6 @@ const taskController = require('../controllers/taskController')
 
 // Projects routes
 router.post('/project', projectController.newProject)
+router.get('/project', projectController.listAllProjects)
 
 module.exports = router

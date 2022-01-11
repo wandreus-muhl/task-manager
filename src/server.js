@@ -14,7 +14,7 @@ const connection = require('./database/connection')
 const models = require('./database/models')
 
 connection.sync({
-	force: true,
+	force: false,
 	logging: false
 }).then(() => {
 	console.log('📇 - Banco de dados sincronizado')
