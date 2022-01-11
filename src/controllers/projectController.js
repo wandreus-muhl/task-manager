@@ -10,15 +10,18 @@ exports.newProject = async (req, res) => {
     if (!req.body.description || req.body.description.length === 0) {
       errors.push('Description cannot be empty')
     }
-
+    // Verifying if was errors
     if (errors.length !== 0) {
       res.status(400).send({
         errors: errors
       })
     } else {
+      // Creating the project on database
       models.Project.create(req.body).then(project => {
         let aux = []
+        // Checking for tasks in request body
         if (req.body.tasks && req.body.tasks.length !== 0) {
+          // If has, run all the array, creating one register for each task in it
           let tasks = req.body.tasks
           tasks.forEach(task => {
             task.projectId = project.id
@@ -36,3 +39,4 @@ exports.newProject = async (req, res) => {
     })
   }
 }
+
