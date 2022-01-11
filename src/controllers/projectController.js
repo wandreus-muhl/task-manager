@@ -21,10 +21,8 @@ exports.newProject = async (req, res) => {
         if (req.body.tasks && req.body.tasks.length !== 0) {
           let tasks = req.body.tasks
           tasks.forEach(task => {
-            models.Task.create({
-              task,
-              projectId: project.id
-            })
+            task.projectId = project.id
+            models.Task.create(task)
             aux.push(task)
           })
         }
