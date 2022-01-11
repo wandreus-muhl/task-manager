@@ -26,6 +26,10 @@ connection.sync({
 	})
 })
 
+// Importing routes
+const router = require('./routes/routes')
+app.use('/api', router)
+
 app.get('/', (req, res) => {
 	res.send({
 		message: 'API has been initialized'
