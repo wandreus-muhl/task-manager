@@ -59,3 +59,25 @@ exports.listAllProjects = async (req, res) => {
     })
   }
 }
+
+exports.deleteProject = async (req, res) => {
+  try {
+    models.Project.destroy({
+      where: {
+        id: req.params.projectId
+      }
+    }).then(project => {
+      if (!project) {
+        res.status(404).send({
+          message: 'There is no project with the given ID in database'
+        })
+      } else {
+        res.status(204).send({})
+      }
+    })
+  } catch (error) {
+    res.status(500).send({
+      message: error.message
+    })
+  }
+} 
