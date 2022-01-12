@@ -17,22 +17,39 @@ exports.newProject = async (req, res) => {
         errors: errors
       })
     } else {
-      // Creating the project on database
-      await models.Project.create(req.body).then(project => {
-        let aux = []
-        // Checking for tasks in request body
-        if (req.body.tasks && req.body.tasks.length !== 0) {
-          // If has, run all the array, creating one register for each task in it
-          let tasks = req.body.tasks
-          tasks.forEach(async task => {
-            task.projectId = project.id
-            await models.Task.create(task)
-            aux.push(task)
+      const errors = []
+      let aux = []
+      // Checking for tasks in request body
+      if (req.body.tasks && req.body.tasks.length !== 0) {
+        // If has, run all the array, creating one register for each task in it
+        let tasks = req.body.tasks
+        tasks.forEach(async task => {
+          // Validating entries
+          if (task.title === '') {
+            errors.push('Title of task cannot be empty')
+          }
+          if (parseInt(task.taskRelevance) < 0 || parseInt(task.taskRelevance) > 10) {
+            errors.push('Relevance value of task must be between 0 and 10')
+          }
+        })
+        // Verifying if was errors
+        if (errors.length !== 0) {
+          return res.status(400).send({
+            errors: errors
+          })
+        } else {
+          // Creating the project on database
+          await models.Project.create(req.body).then(project => {
+            tasks.forEach(task => {
+              task.completed = false // Making sure it's impossible to create a task that's already completed
+              task.projectId = project.id
+              models.Task.create(task).then(aux.push(task))
+            })
+            project.tasks = aux
+            res.status(201).send(project)
           })
         }
-        project.tasks = aux
-        res.status(201).send(project)
-      })
+      }
     }
   } catch (error) {
     res.status(500).send({
