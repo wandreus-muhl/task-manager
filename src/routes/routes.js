@@ -9,6 +9,7 @@ router.post('/project', projectController.newProject)
 router.get('/project', projectController.listAllProjects)
 
 // Tasks routes
+router.post('/project/:projectId/task', taskController.newTask)
 router.get('/project/:projectId', taskController.listAllTasks)
 router.get('/project/:projectId/task/:taskId', taskController.listATask)
 
