@@ -7,6 +7,7 @@ const taskController = require('../controllers/taskController')
 // Projects routes
 router.get('/project', projectController.listAllProjects)
 router.post('/project', projectController.newProject)
+router.put('/project/:projectId', projectController.updateProject)
 router.delete('/project/:projectId', projectController.deleteProject)
 
 // Tasks routes

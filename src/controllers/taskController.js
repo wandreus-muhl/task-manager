@@ -4,7 +4,7 @@ exports.newTask = async (req, res) => {
   try {
     // Validating entries
     const errors = []
-    if (!req.body.title || req.body.title.length === 0) {
+    if (!req.body.title || req.body.title === '') {
       errors.push('Title cannot be empty')
     }
     if (parseInt(req.body.taskRelevance) < 0 || parseInt(req.body.taskRelevance) > 10) {

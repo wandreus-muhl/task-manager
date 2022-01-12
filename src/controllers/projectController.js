@@ -4,10 +4,10 @@ exports.newProject = async (req, res) => {
   try {
     const errors = []
     // Validating entries
-    if (!req.body.title || req.body.title.length === 0) {
+    if (!req.body.title || req.body.title === '') {
       errors.push('Title cannot be empty')
     }
-    if (!req.body.description || req.body.description.length === 0) {
+    if (!req.body.description || req.body.description === '') {
       errors.push('Description cannot be empty')
     }
     // Verifying if was errors
@@ -60,24 +60,65 @@ exports.listAllProjects = async (req, res) => {
   }
 }
 
-exports.deleteProject = async (req, res) => {
-  try {
-    models.Project.destroy({
-      where: {
-        id: req.params.projectId
+exports.updateProject = async (req, res) => {
+      try {
+        // Validating entries
+        const errors = []
+        if (req.body.title === '') {
+          // Verifying if the title was given, if it was, it should not be empty
+          errors.push('Title cannot be empty')
+        }
+        if (req.body.description === '') {
+          // Same logic as the title validation
+          errors.push('Description cannot be empty')
+        }
+        // Verifying if was errors
+        if (errors.length !== 0) {
+          return res.status(400).send({
+            errors: errors
+          })
+        } else {
+          delete req.body.id // Making sure the ID will not be updated
+
+          models.Project.update(req.body, {
+            where: {
+              id: req.params.projectId
+            }
+          }).then(project => {
+            if(project.includes(0)) {
+              res.status(404).send({
+                message: 'There is no project with the given ID in database'
+              })
+            } else {
+              res.status(200).send(project)
+            }
+          })
+        }
+        } catch (error) {
+          res.status(500).send({
+            message: error.message
+          })
+        }
       }
-    }).then(project => {
-      if (!project) {
-        res.status(404).send({
-          message: 'There is no project with the given ID in database'
-        })
-      } else {
-        res.status(204).send({})
+
+      exports.deleteProject = async (req, res) => {
+        try {
+          models.Project.destroy({
+            where: {
+              id: req.params.projectId
+            }
+          }).then(project => {
+            if (!project) {
+              res.status(404).send({
+                message: 'There is no project with the given ID in database'
+              })
+            } else {
+              res.status(204).send({})
+            }
+          })
+        } catch (error) {
+          res.status(500).send({
+            message: error.message
+          })
+        }
       }
-    })
-  } catch (error) {
-    res.status(500).send({
-      message: error.message
-    })
-  }
-} 
