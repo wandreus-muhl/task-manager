@@ -75,3 +75,26 @@ exports.listATask = async (req, res) => {
     })
   }
 }
+
+exports.deleteTask = async (req, res) => {
+  try {
+    models.Task.destroy({
+      where: {
+        id: req.params.taskId,
+        projectId: req.params.projectId
+      }
+    }).then(task => {
+      if (!task) {
+        res.status(404).send({
+          message: 'This project doesn`t contain a task with the given Id'
+        })
+      } else {
+        res.status(204).send({})
+      }
+    })
+  } catch (error) {
+    res.status(500).send({
+      message: error.message
+    })
+  }
+}
