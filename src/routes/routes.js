@@ -14,6 +14,7 @@ router.delete('/project/:projectId', projectController.deleteProject)
 router.get('/project/:projectId', taskController.listAllTasks)
 router.get('/project/:projectId/task/:taskId', taskController.listATask)
 router.post('/project/:projectId/task', taskController.newTask)
+router.put('/project/:projectId/task/:taskId', taskController.updateTask)
 router.delete('/project/:projectId/task/:taskId', taskController.deleteTask)
 
 module.exports = router
