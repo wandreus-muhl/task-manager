@@ -20,7 +20,7 @@ exports.newProject = async (req, res) => {
       const errors = []
       let aux = []
       // Checking for tasks in request body
-      if (req.body.tasks && req.body.tasks.length !== 0) {
+      if (req.body.tasks) {
         // If has, run all the array, creating one register for each task in it
         let tasks = req.body.tasks
         tasks.forEach(async task => {
@@ -49,6 +49,10 @@ exports.newProject = async (req, res) => {
             res.status(201).send(project)
           })
         }
+      } else {
+        await models.Project.create(req.body).then(project => {
+          res.status(201).send(project)
+        })
       }
     }
   } catch (error) {
