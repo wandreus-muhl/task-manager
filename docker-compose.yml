@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.9"
 services:
   mysql:
     image: mysql:latest
@@ -7,16 +7,33 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
     ports:
       - ${DB_PORT}:3306
+    volumes:
+      - ./data/db:/data/db
     networks:
-      - task-manager-network
+      - mysql-compose-network
 
   adminer:
     image: adminer:latest
     ports:
       - 8080:8080
     networks:
-      - task-manager-network
+      - mysql-compose-network
+
+  api:
+    image: node:latest
+    command: sh -c "npm install && npm start"
+    working_dir: /home/node/api
+    env_file:
+      - .env
+    ports:
+      - ${API_PORT}:3000
+    volumes:
+      - ./api:/home/node/api
+    networks: 
+      - mysql-compose-network
+    depends_on:
+      - mysql
 
 networks:
-  task-manager-network:
+  mysql-compose-network:
     driver: bridge
